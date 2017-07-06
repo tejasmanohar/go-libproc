@@ -1,8 +1,5 @@
 package libproc
 
-import (
-	"C"
-)
 import "errors"
 
 var NotImplementedError = errors.New("not implemented")
