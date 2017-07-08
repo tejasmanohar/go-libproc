@@ -2,8 +2,6 @@ package libproc
 
 import (
 	"unsafe"
-
-	low "github.com/tejasmanohar/go-libproc/low"
 )
 
 // ProcListPIDsMaxSize is the max number of PIDs on OS X.
@@ -14,15 +12,16 @@ const ProcListPIDsMaxSize = 99999
 // PID is a process ID.
 type PID uint32
 
+// ListPIDs is an idiomatic binding to proc_listpids.
 func ListPIDs(_type uint32, typeInfo uint32, bufferSize int) ([]PID, error) {
 	if bufferSize == 0 {
 		bufferSize = ProcListPIDsMaxSize
 	}
 
 	buffer := make([]PID, bufferSize)
-	_, err := low.ProcListPIDs(_type, typeInfo, unsafe.Pointer(&buffer[0]), bufferSize)
+	_, err := RawProcListPIDs(_type, typeInfo, unsafe.Pointer(&buffer[0]), bufferSize)
 	if err != nil {
-		return nil, getErr(err)
+		return nil, err
 	}
 
 	ret := make([]PID, 0, bufferSize)
